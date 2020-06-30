@@ -1,32 +1,57 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, NgZone, HostListener } from '@angular/core';
+import { Square } from './square';
 
 @Component({
   selector: 'app-root',
   template: `
-    <!--The content below is only a placeholder and can be replaced.-->
-    <div style="text-align:center" class="content">
-      <h1>
-        Welcome to {{title}}!
-      </h1>
-      <span style="display: block">{{ title }} app is running!</span>
-      <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-    </div>
-    <h2>Here are some links to help you start: </h2>
-    <ul>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-      </li>
-    </ul>
-    
+    <canvas #canvas width="400" height="600" ></canvas>
+    <button (click)="play()">Play</button>
   `,
-  styles: []
+  styles: ['canvas { border-style: solid }']
 })
-export class AppComponent {
-  title = 'tetris';
+export class AppComponent implements OnInit, OnDestroy {
+  @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
+  ctx: CanvasRenderingContext2D;
+  requestId;
+  interval;
+  squares: Square[] = [];
+  title = 'tetris1';
+
+  constructor(private ngZone: NgZone) {}
+
+  ngOnInit() {
+    this.ctx = this.canvas.nativeElement.getContext('2d');
+    this.ctx.fillStyle = 'red';
+    this.ngZone.runOutsideAngular(() => this.tick());
+    setInterval(() => {
+      this.tick();
+    }, 200);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.interval);
+    cancelAnimationFrame(this.requestId);
+  }
+
+  tick() {
+    if (this.requestId !== 26){
+      this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+      this.squares.forEach((square: Square) => {
+        square.moveRight();
+      });
+      this.requestId = requestAnimationFrame(() => this.tick);
+  }
+  }
+
+  play() {
+    const square = new Square(this.ctx);
+    this.squares = this.squares.concat(square);
+    console.log('play');
+  }
+  
+  @HostListener('window:keydown.arrowright', ['$event'])
+  onRight($event){
+    console.log('rrrr');
+  }
+  
 }
