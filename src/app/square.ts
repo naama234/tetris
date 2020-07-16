@@ -1,14 +1,34 @@
 export class Square {
   private color = 'red';
-  private x = 0;
+  private x = 6;
   private y = 0;
   private z = 30;
 
   constructor(private ctx: CanvasRenderingContext2D) {}
 
-  moveRight() {
+  moveDown() {
     this.y++;
     this.draw();
+  }
+
+  moveLeft(){
+    if (this.x - 1 >= 0)
+      this.x--;
+  }
+
+  moveRight(){
+    if (this.x + 1 < 14){
+      this.x++;
+    }
+      
+  }
+
+  getY(){
+    return this.y;
+  }
+
+  getX(){
+    return this.x;
   }
 
   private draw() {
