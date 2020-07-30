@@ -15,24 +15,12 @@ export class AppComponent implements OnInit, OnDestroy {
   ctx: CanvasRenderingContext2D;
   requestId;
   interval;
-<<<<<<< HEAD
-  direction;
-  stop = false;
-  squares: SquareTetromino[] = [];
-  title = 'tetris1';
-  squaresOnboard = new Board();
-  saveX = 0;
-  saveY = 0;  
-  lowerLimit = false;
-  fullLine = false;
-
-=======
   squares: Square[] = [];
   title = 'tetris';
   rightPressed = false;
   leftPressed = false;
   boardObj:Board;
->>>>>>> 248cee84fb8598c318988216123c1d0ee969ccef
+
   constructor(private ngZone: NgZone) {}
 
   ngOnInit() {
@@ -51,65 +39,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
   
   tick() {
-<<<<<<< HEAD
-    //console.log(this.squaresOnboard);
-    if (!this.lowerLimit){
-      this.ctx.clearRect(this.saveX, this.saveY, 30, 30);
-    }
-    else if (this.fullLine)
-    {
-      this.ctx.clearRect(0, this.saveY, 30 * 12, 30);
-
-    }
-    this.squares.forEach((square: SquareTetromino) => {
-      if (this.direction === 'right') {
-        square.moveRight();
-        this.direction = 'down';
-      }
-
-      if (this.direction === 'left') {
-        square.moveLeft();
-        this.direction = 'down';
-      }
-      else {
-        square.moveDown();
-      }
-      this.saveX = square.getZ() * square.getX();
-      this.saveY = square.getZ() * square.getY();
-      
-      if (square.getY() === 19){
-        this.lowerLimit = true;
-        const new_drop_square = new SquareTetromino(this.ctx);
-        this.squares = this.squares.concat(new_drop_square);
-        let index = this.squares.indexOf(square, 0);
-        
-        console.log('x ' + square.getX());
-        console.log('y ' + square.getY());
-        this.squares.splice(index, 1);
-        this.squaresOnboard.set_tetromino(square.getX(), square.getY());
-        if (this.squaresOnboard.check_if_line_full()){
-          this.fullLine = true;
-          this.squaresOnboard.set_to_zeros();
-        }
-        else {
-          this.fullLine = false;
-        }
-      }
-      else {
-          this.lowerLimit = false;
-      }
-
-      //console.log('===========')
-      //console.log('X = ' + square.getX());
-      //console.log('Y = ' + square.getY());
-      //console.log('req = ' + this.requestId);
-
-    });
-  
-    console.log(this.squaresOnboard.get_board());
-    this.requestId = requestAnimationFrame(() => this.tick);
-}
-=======
       this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
       this.drawBoard();
       if (this.boardObj.fullRow()){
@@ -140,13 +69,12 @@ export class AppComponent implements OnInit, OnDestroy {
       this.requestId = requestAnimationFrame(() => this.tick);
   
   }
->>>>>>> 248cee84fb8598c318988216123c1d0ee969ccef
+f
 
   play() {
     const square = new SquareTetromino(this.ctx);
     this.squares = this.squares.concat(square);
-<<<<<<< HEAD
-=======
+
   }
 
   drawBoard(){
@@ -155,26 +83,16 @@ export class AppComponent implements OnInit, OnDestroy {
           this.ctx.fillRect(30 * i, 30 * 19, 30, 30);
         } 
       }         
->>>>>>> 248cee84fb8598c318988216123c1d0ee969ccef
   }
 
   @HostListener('window:keydown.arrowright', ['$event'])
   onRight($event){
-<<<<<<< HEAD
-    console.log('rrrr');
-    this.direction = 'right';
-=======
     this.rightPressed = true;
->>>>>>> 248cee84fb8598c318988216123c1d0ee969ccef
+
   }
 
   @HostListener('window:keydown.arrowleft', ['$event'])
   onLeft($event){
-<<<<<<< HEAD
-    console.log('llll');
-    this.direction = 'left';
-=======
     this.leftPressed = true;
->>>>>>> 248cee84fb8598c318988216123c1d0ee969ccef
   }
 }
